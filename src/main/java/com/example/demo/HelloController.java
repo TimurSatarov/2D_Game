@@ -56,7 +56,7 @@ public class HelloController {
     @FXML
     void initialize() {
 
-//        if(right || left){
+        if(right || left){
             // for front background images
             TranslateTransition bg1_3Transition = createTranslateTransition(bg1_3, 5000);
             TranslateTransition bg2_3Transition = createTranslateTransition(bg2_3, 5000);
@@ -80,7 +80,7 @@ public class HelloController {
             bg1_1parallelTransition.play();
 
             timer.start();
-//        }
+        }
     }
 
     public TranslateTransition createTranslateTransition(ImageView imageView, int durationMillis) {
