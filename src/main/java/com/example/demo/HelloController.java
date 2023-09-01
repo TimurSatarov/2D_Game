@@ -28,26 +28,26 @@ public class HelloController {
     private ParallelTransition bg2_2parallelTransition;
     private ParallelTransition bg3_3parallelTransition;
 
-    public static boolean right = false;
-    public static boolean left = false;
+    public static boolean right = true;
+    public static boolean left = true;
 
     public static boolean jump = false;
 
-    private int playerSpeed = 3, jumpDownSpeed = 5;
+    private int playerSpeed = 3, jumpDownSpeed = 4;
 
     AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long l) {
-            if(jump && player.getLayoutY() > 20f)
+            if(jump && player.getLayoutY() > 5f)
                 player.setLayoutY(player.getLayoutY() - playerSpeed);
-            else if (player.getLayoutY() <= 90f) {
+            else if (player.getLayoutY() <= 150f) {
                 jump = false;
-                player.setLayoutY((player.getLayoutY() + playerSpeed));
+                player.setLayoutY((player.getLayoutY() + jumpDownSpeed));
             }
-            if(right && player.getLayoutX() <10)
+            if(right && player.getLayoutX() <100f)
                 player.setLayoutX(player.getLayoutX() + playerSpeed);
 
-            if(left && player.getLayoutX() > -170)
+            if(left && player.getLayoutX() > 0f)
                 player.setLayoutX(player.getLayoutX() - playerSpeed);
 
         }
