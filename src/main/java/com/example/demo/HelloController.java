@@ -3,11 +3,9 @@ package com.example.demo;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.animation.AnimationTimer;
-import javafx.animation.Interpolator;
-import javafx.animation.ParallelTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
@@ -20,35 +18,69 @@ public class HelloController {
     private URL location;
 
     @FXML
-    private ImageView bg1_1, bg1_2, bg1_3, bg2_1, bg2_2, bg2_3, player;
+    private ImageView bg1_1, bg1_2, bg1_3, bg2_1, bg2_2, bg2_3, player, skeleton;
+
+    @FXML
+    private Label label_pause;
 
     private final int BG_WIDTH = 712;
+
+
 
     private ParallelTransition bg1_1parallelTransition;
     private ParallelTransition bg2_2parallelTransition;
     private ParallelTransition bg3_3parallelTransition;
+
+    TranslateTransition skeletonTransition;
 
     public static boolean right = true;
     public static boolean left = true;
 
     public static boolean jump = false;
 
+    public static boolean isPause = false;
+
+
     private int playerSpeed = 3, jumpDownSpeed = 4;
 
     AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long l) {
-            if(jump && player.getLayoutY() > 5f)
+
+            //Dir - Y (Jump)
+            if(jump && player.getLayoutY() > 160f)
                 player.setLayoutY(player.getLayoutY() - playerSpeed);
-            else if (player.getLayoutY() <= 150f) {
+            else if (player.getLayoutY() <= 238f) {
                 jump = false;
                 player.setLayoutY((player.getLayoutY() + jumpDownSpeed));
             }
-            if(right && player.getLayoutX() <100f)
+
+            //Dir - X
+            if(right && player.getLayoutX() <300f)
                 player.setLayoutX(player.getLayoutX() + playerSpeed);
 
-            if(left && player.getLayoutX() > 0f)
+            if(left && player.getLayoutX() > -5f)
                 player.setLayoutX(player.getLayoutX() - playerSpeed);
+
+
+            //Pause
+            if(isPause && !label_pause.isVisible()) {
+                playerSpeed = 0;
+                jumpDownSpeed = 0;
+                bg1_1parallelTransition.pause();
+                bg2_2parallelTransition.pause();
+                bg3_3parallelTransition.pause();
+                skeletonTransition.pause();
+                label_pause.setVisible(true);
+            }
+
+            else if(!isPause && label_pause.isVisible()) {
+                bg1_1parallelTransition.play();
+                bg2_2parallelTransition.play();
+                bg3_3parallelTransition.play();
+                skeletonTransition.play();
+                label_pause.setVisible(false);
+            }
 
         }
     };
@@ -56,31 +88,38 @@ public class HelloController {
     @FXML
     void initialize() {
 
-        if(right || left){
-            // for front background images
-            TranslateTransition bg1_3Transition = createTranslateTransition(bg1_3, 5000);
-            TranslateTransition bg2_3Transition = createTranslateTransition(bg2_3, 5000);
-            bg3_3parallelTransition = new ParallelTransition(bg1_3Transition, bg2_3Transition);
-            bg3_3parallelTransition.setCycleCount(TranslateTransition.INDEFINITE);
-            bg3_3parallelTransition.play();
+//        if(right || left){
+        // for front background images
+        TranslateTransition bg1_3Transition = createTranslateTransition(bg1_3, 10000);
+        TranslateTransition bg2_3Transition = createTranslateTransition(bg2_3, 10000);
+        bg3_3parallelTransition = new ParallelTransition(bg1_3Transition, bg2_3Transition);
+        bg3_3parallelTransition.setCycleCount(TranslateTransition.INDEFINITE);
+        bg3_3parallelTransition.play();
 
-            // for middle background images
-            TranslateTransition bg1_2Transition = createTranslateTransition(bg1_2, 10000);
-            TranslateTransition bg2_2Transition = createTranslateTransition(bg2_2, 10000);
-            bg2_2parallelTransition = new ParallelTransition(bg1_2Transition, bg2_2Transition);
-            bg2_2parallelTransition.setCycleCount(TranslateTransition.INDEFINITE);
-            bg2_2parallelTransition.play();
+        // for middle background images
+        TranslateTransition bg1_2Transition = createTranslateTransition(bg1_2, 15000);
+        TranslateTransition bg2_2Transition = createTranslateTransition(bg2_2, 15000);
+        bg2_2parallelTransition = new ParallelTransition(bg1_2Transition, bg2_2Transition);
+        bg2_2parallelTransition.setCycleCount(TranslateTransition.INDEFINITE);
+        bg2_2parallelTransition.play();
 
 
-            //for last background images
-            TranslateTransition bg1_1Transition = createTranslateTransition(bg1_1, 20000);
-            TranslateTransition bg2_1Transition = createTranslateTransition(bg2_1, 20000);
-            bg1_1parallelTransition = new ParallelTransition(bg1_1Transition, bg2_1Transition);
-            bg1_1parallelTransition.setCycleCount(TranslateTransition.INDEFINITE);
-            bg1_1parallelTransition.play();
+        //for last background images
+        TranslateTransition bg1_1Transition = createTranslateTransition(bg1_1, 20000);
+        TranslateTransition bg2_1Transition = createTranslateTransition(bg2_1, 20000);
+        bg1_1parallelTransition = new ParallelTransition(bg1_1Transition, bg2_1Transition);
+        bg1_1parallelTransition.setCycleCount(TranslateTransition.INDEFINITE);
+        bg1_1parallelTransition.play();
 
-            timer.start();
-        }
+        //Enemy
+        skeletonTransition = new TranslateTransition(Duration.millis(9000), skeleton);
+        skeletonTransition.setFromX(0);
+        skeletonTransition.setToX(BG_WIDTH * -1 -150);
+        skeletonTransition.setInterpolator(Interpolator.LINEAR);
+        skeletonTransition.setCycleCount(Animation.INDEFINITE);
+        skeletonTransition.play();
+        timer.start();
+//        }
     }
 
     public TranslateTransition createTranslateTransition(ImageView imageView, int durationMillis) {
@@ -92,4 +131,3 @@ public class HelloController {
         return transition;
     }
 }
-
