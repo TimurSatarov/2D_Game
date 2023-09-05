@@ -43,12 +43,22 @@
             <Image url="@../../../images/background/Idle.gif" />
          </image>
       </ImageView>
+      <ImageView fx:id="player_run" fitHeight="168.0" fitWidth="126.0" focusTraversable="true" layoutX="-11.0" layoutY="232.0" pickOnBounds="true" preserveRatio="true" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-11.0">
+         <image>
+            <Image url="@../../../images/background/Run.gif" />
+         </image>
+      </ImageView>
       <ImageView fx:id="skeleton" fitHeight="160.0" fitWidth="130.0" layoutX="787.0" layoutY="240.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../images/background/Skeleton_Walk.gif" />
          </image>
       </ImageView>
-      <Label fx:id="label_pause" layoutX="234.0" layoutY="147.0" prefHeight="106.0" prefWidth="245.0" text="Pause" textFill="WHITE">
+      <Label fx:id="label_pause" focusTraversable="false" layoutX="234.0" layoutY="147.0" prefHeight="106.0" prefWidth="245.0" text="Pause" textFill="WHITE" visible="false">
+         <font>
+            <Font name="Berlin Sans FB" size="96.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_lose" focusTraversable="false" layoutX="254.0" layoutY="147.0" prefHeight="106.0" prefWidth="245.0" text="Lose" textFill="WHITE" visible="false">
          <font>
             <Font name="Berlin Sans FB" size="96.0" />
          </font>

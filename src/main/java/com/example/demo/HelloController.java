@@ -18,10 +18,10 @@ public class HelloController {
     private URL location;
 
     @FXML
-    private ImageView bg1_1, bg1_2, bg1_3, bg2_1, bg2_2, bg2_3, player, skeleton;
+    private ImageView bg1_1, bg1_2, bg1_3, bg2_1, bg2_2, bg2_3, player, skeleton, player_run;
 
     @FXML
-    private Label label_pause;
+    private Label label_pause, label_lose;
 
     private final int BG_WIDTH = 712;
 
@@ -33,8 +33,8 @@ public class HelloController {
 
     TranslateTransition skeletonTransition;
 
-    public static boolean right = true;
-    public static boolean left = true;
+    public static boolean right = false;
+    public static boolean left = false;
 
     public static boolean jump = false;
 
@@ -48,25 +48,26 @@ public class HelloController {
         public void handle(long l) {
 
             //Dir - Y (Jump)
-            if(jump && player.getLayoutY() > 160f)
+            if(jump && player.getLayoutY() > 160f && player.getLayoutY() > 160f)
                 player.setLayoutY(player.getLayoutY() - playerSpeed);
-            else if (player.getLayoutY() <= 238f) {
+            else if (player.getLayoutY() <= 238f && player.getLayoutY() < 238f) {
                 jump = false;
                 player.setLayoutY((player.getLayoutY() + jumpDownSpeed));
             }
 
             //Dir - X
-            if(right && player.getLayoutX() <300f)
-                player.setLayoutX(player.getLayoutX() + playerSpeed);
-
-            if(left && player.getLayoutX() > -5f)
-                player.setLayoutX(player.getLayoutX() - playerSpeed);
+            if(right && player_run.getLayoutX() <300f) {
+                player_run.setLayoutX(player_run.getLayoutX() + playerSpeed);
+            }
+            if(left && player_run.getLayoutX() > -5f)
+                player_run.setLayoutX(player_run.getLayoutX() - playerSpeed);
 
 
             //Pause
             if(isPause && !label_pause.isVisible()) {
-                playerSpeed = 0;
+                label_lose.setVisible(true);
                 jumpDownSpeed = 0;
+                playerSpeed = 0;
                 bg1_1parallelTransition.pause();
                 bg2_2parallelTransition.pause();
                 bg3_3parallelTransition.pause();
@@ -78,8 +79,34 @@ public class HelloController {
                 bg1_1parallelTransition.play();
                 bg2_2parallelTransition.play();
                 bg3_3parallelTransition.play();
+                playerSpeed = 0;
                 skeletonTransition.play();
                 label_pause.setVisible(false);
+            }
+
+            if(player.getBoundsInParent().intersects(skeleton.getBoundsInParent())){
+                jumpDownSpeed = 0;
+                bg1_1parallelTransition.pause();
+                bg2_2parallelTransition.pause();
+                bg3_3parallelTransition.pause();
+                skeletonTransition.pause();
+            }
+            if(jump){
+                right = false;
+                left = false;
+            }
+            if(right || left){
+                player.setVisible(false);
+                player_run.setVisible(true);
+                bg1_1parallelTransition.play();
+                bg2_2parallelTransition.play();
+                bg3_3parallelTransition.play();
+            }else{
+                player.setVisible(true);
+                player_run.setVisible(false);
+                bg1_1parallelTransition.pause();
+                bg2_2parallelTransition.pause();
+                bg3_3parallelTransition.pause();
             }
 
         }
